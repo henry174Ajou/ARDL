@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ARDL="namespace/ARDL" targetNamespace="namespace/ARDL" elementFormDefault="qualified">
+
+    <xs:element name="ARDL">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="version" type="xs:integer" />
+
+                <xs:element name="MQTT" type="ARDL:MQTTInformation" />
+                <xs:element name="dataFormat" type="ARDL:DataFormat" />
+                <xs:element name="aggregation" type="ARDL:Aggregation" />
+                <xs:element name="moduleEnviornment" type="ARDL:ModuleEnviornment" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- named complexTypes define section -->
+
+    <!-- MQTT -->
+    <xs:complexType name="MQTTInformation">
+        <xs:sequence>
+            <xs:element name="upstream" type="ARDL:MQTTSubscribe" />
+            <xs:element name="downstream" type="ARDL:MQTTSubscribe" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MQTTSubscribe">
+        <xs:all>
+            <xs:element name="topic" type="xs:string" />
+            <xs:element name="QoS" type="xs:integer" />
+        </xs:all>
+    </xs:complexType>
+
+    <!-- data format -->
+    <xs:complexType name="DataFormat">
+        <xs:sequence>
+            <xs:element name="input" type="ARDL:DataDefinition" />
+            <xs:element name="output" type="ARDL:DataDefinition" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DataDefinition">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="value" type="ARDL:PrimitiveValue" />
+            <xs:element name="structure" type="ARDL:Structure" />
+            <xs:element name="list" type="ARDL:List" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="PrimitiveValue">
+        <xs:attribute name="name" type="xs:string" />
+        <xs:attribute name="type">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="int" />
+                    <xs:enumeration value="double" />
+                    <xs:enumeration value="string" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="Structure">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="value" type="ARDL:PrimitiveValue" />
+            <xs:element name="structure" type="ARDL:Structure" />
+            <xs:element name="list" type="ARDL:List" />
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="List">
+        <xs:choice>
+            <xs:element name="value" type="ARDL:PrimitiveValue" />
+            <xs:element name="structure" type="ARDL:Structure" />
+            <xs:element name="list" type="ARDL:List" />
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string" />
+    </xs:complexType>
+
+    <!-- aggregation -->
+    <xs:complexType name="Aggregation">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="sum">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" />
+                    <xs:attribute nane="target" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="average">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" />
+                    <xs:attribute nane="target" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="count">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" />
+                    <xs:attribute nane="target" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+    <!-- module info -->
+    <xs:complexType name="ModuleEnviornment">
+        <xs:choice>
+            <xs:element name="OCI" type="xs:string"></xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+</xs:schema>
